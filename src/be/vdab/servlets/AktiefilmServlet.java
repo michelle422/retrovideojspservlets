@@ -15,26 +15,28 @@ import be.vdab.entities.Genres;
 import be.vdab.repositories.FilmsRepository;
 
 /**
- * Servlet implementation class IndexServlet
+ * Servlet implementation class FilmsServlet
  */
-@WebServlet("/index.htm")
-public class IndexServlet extends HttpServlet {
+@WebServlet("/Aktiefilm.htm")
+public class AktiefilmServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private static final String VIEW = "/WEB-INF/JSP/index.jsp"; 
+	private static final String VIEW = "/WEB-INF/JSP/aktiefilm.jsp";
 	private final transient FilmsRepository filmsRepository = new FilmsRepository();
 	
 	@Resource(name = FilmsRepository.JNDI_NAME)
 	void setDataSource(DataSource dataSource) {
 		filmsRepository.setDataSource(dataSource);
-	} 
+	}
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
 		List<Genres> genres = filmsRepository.findAllGenres();
 		request.setAttribute("genres", genres);
+//		request.setAttribute("id", );
+		String genreId = "1"; 
+		request.setAttribute("aktiefilms", filmsRepository.readFilms(Long.parseLong(genreId)));
 		request.getRequestDispatcher(VIEW).forward(request, response);
 	}
 

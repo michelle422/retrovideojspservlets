@@ -1,5 +1,5 @@
 body {
-	background-color: #FFFFDE;
+	background-color: #df9f9f;
 	color: #5A0000;
 	font-family: sans-serif;
 }
@@ -63,7 +63,7 @@ input[type='checkbox'] {
 }
 
 nav ul {
-	background-color: red;
+	background-color: blue;
 	padding: 0.4em 0;
 }
 

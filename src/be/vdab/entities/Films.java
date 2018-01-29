@@ -19,6 +19,12 @@ public class Films {
 		this.prijs = prijs;
 	}
 
+	public Films(long id, String titel) {
+		super();
+		this.id = id;
+		this.titel = titel;
+	}
+
 	public long getId() {
 		return id;
 	}

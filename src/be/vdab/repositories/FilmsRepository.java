@@ -63,10 +63,6 @@ public class FilmsRepository extends AbstractRepository {
 	
 	private Films resultSetRijNaarFilms(ResultSet resultSet) throws SQLException {
 		return new Films(resultSet.getLong("id"), 
-							resultSet.getLong("genreId"), 
-							resultSet.getString("titel"), 
-							resultSet.getLong("voorraad"), 
-							resultSet.getLong("gereserveerd"), 
-							resultSet.getBigDecimal("prijs"));
+							resultSet.getString("titel"));
 	}
 }

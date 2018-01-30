@@ -14,26 +14,47 @@ import be.vdab.entities.Genres;
 
 public class FilmsRepository extends AbstractRepository {
 	public static final String SELECT_FILM_VAN_GENRE = 
-			"select id, titel from films where genreid = ? order by titel";
+			"select id, titel, voorraad, gereserveerd, prijs from films where genreid = ? order by titel";
+	public static final String SELECT_FILM_DETAIL =
+			"select id, titel, voorraad, gereserveerd, prijs from films where id = ?";
 	private static final String FIND_ALL_GENRES = 
 			"select id, naam from genres order by naam";
 	
-	public Optional<Films> readFilms(long id) {
+	public List<Films> readFilmsGenre(long id) {
 		try (Connection connection = dataSource.getConnection();
 			 PreparedStatement statement = connection.prepareStatement(SELECT_FILM_VAN_GENRE)) {
 			connection.setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
 			connection.setAutoCommit(false);
-			Optional<Films> filmsGenre;
+			List<Films> filmsGenre = new ArrayList<>();
 			statement.setLong(1, id);
 			try (ResultSet resultSet = statement.executeQuery()) {
-				if (resultSet.next()) {
-					filmsGenre = Optional.of(resultSetRijNaarFilms(resultSet));
-				} else {
-					filmsGenre = Optional.empty();
+				while (resultSet.next()) {
+					filmsGenre.add(resultSetRijNaarFilms(resultSet));
 				}
 			}
 			connection.commit();
 			return filmsGenre;
+		} catch (SQLException ex) {
+			throw new RepositoryException(ex);
+		}
+	}
+	
+	public Optional<Films> readFilmDetail(long id) {
+		try (Connection connection = dataSource.getConnection();
+			 PreparedStatement statement = connection.prepareStatement(SELECT_FILM_DETAIL)) {
+			connection.setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
+			connection.setAutoCommit(false);
+			statement.setLong(1, id);
+			Optional<Films> film;
+			try (ResultSet resultSet = statement.executeQuery()) {
+				if (resultSet.next()) {
+					film = Optional.of(resultSetRijNaarFilms(resultSet));
+				} else {
+					film = Optional.empty();
+				}
+			}
+			connection.commit();
+			return film;
 		} catch (SQLException ex) {
 			throw new RepositoryException(ex);
 		}
@@ -63,6 +84,9 @@ public class FilmsRepository extends AbstractRepository {
 	
 	private Films resultSetRijNaarFilms(ResultSet resultSet) throws SQLException {
 		return new Films(resultSet.getLong("id"), 
-							resultSet.getString("titel"));
+							resultSet.getString("titel"), 
+							resultSet.getLong("voorraad"), 
+							resultSet.getLong("gereserveerd"), 
+							resultSet.getBigDecimal("prijs"));
 	}
 }

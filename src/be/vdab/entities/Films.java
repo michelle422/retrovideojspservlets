@@ -18,11 +18,13 @@ public class Films {
 		this.gereserveerd = gereserveerd;
 		this.prijs = prijs;
 	}
-
-	public Films(long id, String titel) {
-		super();
+	
+	public Films(long id, String titel, long voorraad, long gereserveerd, BigDecimal prijs) {
 		this.id = id;
 		this.titel = titel;
+		this.voorraad = voorraad;
+		this.gereserveerd = gereserveerd;
+		this.prijs = prijs;
 	}
 
 	public long getId() {

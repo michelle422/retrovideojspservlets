@@ -19,7 +19,9 @@
 		<dt>Beschikbaar</dt><dd>${beschikbaar}</dd>
 	</dl>
 	<c:if test='${beschikbaar > 0}'>
-		<input type='submit' value='In mandje' id='inmandje'>
+		<form action="inmandje.htm" id="naarmandje">
+			<input type='submit' value='In mandje' id='inmandje'>
+		</form>
 	</c:if>
 </body>
 </html>

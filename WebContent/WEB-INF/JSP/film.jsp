@@ -16,15 +16,15 @@
 		<c:set var="beschikbaar" value="${film.voorraad - film.gereserveerd}"/>
 		<div class="tooltip">
 			<a href="<c:out value='${detailURL}'/>">
-			<img src='<c:url value="/images/${film.id}.jpg"/>' alt='${film.titel}'>
-			<c:choose>
-				<c:when test="${beschikbaar > 0}">
-					<span class="tooltiptext">reservatie mogelijk</span>
-				</c:when>
-				<c:otherwise>
-					<span class="tooltiptext">reservatie niet mogelijk</span>
-				</c:otherwise>
-			</c:choose>
+				<img src='<c:url value="/images/${film.id}.jpg"/>' alt='${film.titel}'>
+				<c:choose>
+					<c:when test="${beschikbaar > 0}">
+						<span class="tooltiptext">reservatie mogelijk</span>
+					</c:when>
+					<c:otherwise>
+						<span class="tooltiptext">reservatie niet mogelijk</span>
+					</c:otherwise>
+				</c:choose>
 			</a>
 		</div>
 	</c:forEach>

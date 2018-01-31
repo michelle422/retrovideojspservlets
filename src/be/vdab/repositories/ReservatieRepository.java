@@ -13,10 +13,6 @@ import be.vdab.entities.Reservaties;
 public class ReservatieRepository extends AbstractRepository {
 	public static final String CREATE_RESERVATIE = 
 			"insert into reservaties values (?, ?, ?)";
-	public static final String UPDATE_FILM = 
-			"update films "
-			+ "set gereserveerd = gereserveerd + 1 "
-			+ "where id in (";
 	
 	public void createReservatie(Reservaties reservatie) {
 		try (Connection connection = dataSource.getConnection();
@@ -34,9 +30,5 @@ public class ReservatieRepository extends AbstractRepository {
 		} catch (SQLException ex) {
 			throw new RepositoryException(ex);
 		}
-	}
-	
-	public void updateGereserveerd(List<Long> filmIds) {
-		
 	}
 }

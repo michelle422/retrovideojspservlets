@@ -19,6 +19,10 @@ public class FilmsRepository extends AbstractRepository {
 			"select id, titel, voorraad, gereserveerd, prijs from films where id = ?";
 	private static final String FIND_ALL_GENRES = 
 			"select id, naam from genres order by naam";
+	public static final String UPDATE_FILM = 
+			"update films "
+			+ "set gereserveerd = gereserveerd + 1 "
+			+ "where id in (";
 	
 	public List<Films> readFilmsGenre(long id) {
 		try (Connection connection = dataSource.getConnection();
@@ -78,6 +82,10 @@ public class FilmsRepository extends AbstractRepository {
 		}
 	}
 	
+	public void updateGereserveerd(List<Long> filmIds) {
+		
+	}
+
 	private Genres resultSetRijNaarGenres(ResultSet resultSet) throws SQLException {
 		return new Genres(resultSet.getLong("id"), resultSet.getString("naam"));
 	}

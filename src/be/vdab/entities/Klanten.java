@@ -7,7 +7,8 @@ public class Klanten {
 	private String straatNummer;
 	private String postcode;
 	private String gemeente;
-	public Klanten(String familienaam, String voornaam, String straatNummer, String postcode, String gemeente) {
+	public Klanten(long id, String familienaam, String voornaam, String straatNummer, String postcode, String gemeente) {
+		this.id = id;
 		this.familienaam = familienaam;
 		this.voornaam = voornaam;
 		this.straatNummer = straatNummer;

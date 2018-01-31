@@ -8,10 +8,42 @@
 </head>
 <body>
 	<a href='/retrovideo'>Reserveren</a>
-	<a href='/inmandje.htm'>Klant</a>
+	<a href='/retrovideo/inmandje.htm'>Mandje</a>
 	<br>
 	<h1>Klant</h1>
 	<br>
-	
+	<form method="get" action="<c:url value="/klanten.htm" />">
+		<label>Familienaam bevat:<span>${fouten}</span>
+			<input name='familienaam' value='${param.familienaam}' type="text" autofocus required>
+		</label>
+		<input type='submit' value='Zoeken' >
+	</form>
+	<c:if test="${not empty klanten}">
+		<table id="klanten">
+			<thead>
+				<tr>
+					<th>Naam</th>
+					<th>Straat - Huisnummer</th>
+					<th>Postcode</th>
+					<th>Gemeente</th>
+				</tr>
+			</thead>
+			<tbody>
+				<c:forEach var="klant" items="${klanten}">
+					<tr>
+						<td>
+							<c:url value='/bevestigen.htm' var='bevestigURL'>
+								<c:param name='id' value='${klant.id}'/>
+							</c:url>
+							<a href="<c:out value='${bevestigURL}'/>">${klant.voornaam.concat(klant.familienaam)}</a>
+						</td>
+						<td>${klant.straatNummer}</td>
+						<td>${klant.postcode}</td>
+						<td>${klant.gemeente}</td>
+					</tr>
+				</c:forEach>
+			</tbody>
+		</table>
+	</c:if>
 </body>
 </html>

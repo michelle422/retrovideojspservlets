@@ -1,5 +1,5 @@
 body {
-	background-color: #df9f9f;
+	background-color: #ffcc99;
 	color: #5A0000;
 	font-family: sans-serif;
 }
@@ -134,4 +134,22 @@ img {
 
 .tooltip:hover .tooltiptext {
     visibility: visible;
+}
+
+table {
+	font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 50%;
+}
+
+td, th {
+	border: 1px solid #ddd;
+}
+
+th {
+	padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: #cc6600;
+    color: white; 
 }

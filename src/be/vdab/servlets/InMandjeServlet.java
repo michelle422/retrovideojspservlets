@@ -1,8 +1,8 @@
 package be.vdab.servlets;
 
 import java.io.IOException;
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.annotation.Resource;
 import javax.servlet.ServletException;
@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.sql.DataSource;
 
+import be.vdab.entities.Films;
 //import be.vdab.entities.Films;
 import be.vdab.repositories.FilmsRepository;
 //import be.vdab.utils.StringUtils;
@@ -36,25 +37,20 @@ public class InMandjeServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-//		String id = request.getParameter("id");
 		HttpSession session = request.getSession(false);
 		if (session != null) {
 			@SuppressWarnings("unchecked")
-			Set<Long> mandje = (Set<Long>) session.getAttribute(MANDJE);
-			if (mandje != null) {
-				request.setAttribute("filmsInMandje", 
-						mandje.stream()
-							.map(id -> filmsRepository.readFilmDetail(id))
-							.filter(optionalPizza -> optionalPizza.isPresent())
-							.map(optionalFilm -> optionalFilm.get())
-							.collect(Collectors.toList()));
+			List<Films> mandje = (List<Films>) session.getAttribute(MANDJE);
+			Films film = (Films) session.getAttribute("film");
+			if (mandje == null) {
+				mandje = new ArrayList<>();
 			}
-//			if (StringUtils.isLong(id)) {
-//				filmsRepository.readFilmDetail(Long.parseLong(id)).ifPresent(filmInMandje -> request.setAttribute("filmInMandje", filmInMandje));
-//			} else {
-//				request.setAttribute("fout", "id niet correct");
-//			}
-//			mandje.add(filmInMandje);
+			if (film != null) {
+				mandje.add(film);
+				session.removeAttribute("film");
+			}
+			request.setAttribute("filmsInMandje", mandje);
+			session.setAttribute(MANDJE, mandje);
 		}
 		request.getRequestDispatcher(VIEW).forward(request, response);
 	}
@@ -63,7 +59,6 @@ public class InMandjeServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
 		doGet(request, response);
 	}
 

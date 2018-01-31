@@ -19,9 +19,14 @@
 		<dt>Beschikbaar</dt><dd>${beschikbaar}</dd>
 	</dl>
 	<c:if test='${beschikbaar > 0}'>
-		<form action="inmandje.htm" id="naarmandje">
+		<form method='post' id="naarmandje">
 			<input type='submit' value='In mandje' id='inmandje'>
 		</form>
 	</c:if>
+	<script>
+	 	document.getElementById('naarmandje').onsubmit = function() {
+	 		document.getElementById('inmandje').disabled = true;
+	 	};
+	</script>
 </body>
 </html>

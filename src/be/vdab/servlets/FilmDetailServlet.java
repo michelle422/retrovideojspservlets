@@ -1,8 +1,6 @@
 package be.vdab.servlets;
 
 import java.io.IOException;
-import java.util.LinkedHashSet;
-import java.util.Set;
 
 import javax.annotation.Resource;
 import javax.servlet.ServletException;
@@ -24,7 +22,6 @@ public class FilmDetailServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static final String VIEW = "/WEB-INF/JSP/filmdetail.jsp";
 	private static final String REDIRECT_URL = "/inmandje.htm";
-	private final static String MANDJE = "mandje";
 	private final transient FilmsRepository filmsRepository = new FilmsRepository();
        
 	@Resource(name = FilmsRepository.JNDI_NAME)
@@ -49,19 +46,14 @@ public class FilmDetailServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-//		String inMandje = request.getParameter("beschikbaar");
-//		System.out.println(inMandje);
 		String id = request.getParameter("id");
-		if (id != null) {
-			HttpSession session = request.getSession();
-			@SuppressWarnings("unchecked")
-			Set<Long> mandje = (Set<Long>) session.getAttribute(MANDJE);
-			if (mandje == null) {
-				mandje = new LinkedHashSet<>();
-			}
-			mandje.add(Long.parseLong(id));
-			session.setAttribute(MANDJE, mandje);
+		HttpSession session = request.getSession();
+		if (StringUtils.isLong(id)) {
+			filmsRepository.readFilmDetail(Long.parseLong(id)).ifPresent(film -> session.setAttribute("film", film));
+		} else {
+			request.setAttribute("fout", "id niet correct");
 		}
+
 		response.sendRedirect(request.getContextPath() + REDIRECT_URL);
 	}
 

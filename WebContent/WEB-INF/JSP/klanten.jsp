@@ -35,7 +35,8 @@
 							<c:url value='/bevestigen.htm' var='bevestigURL'>
 								<c:param name='id' value='${klant.id}'/>
 							</c:url>
-							<a href="<c:out value='${bevestigURL}'/>">${klant.voornaam.concat(klant.familienaam)}</a>
+							<c:set var="voornaam" value="${klant.voornaam.concat(' ')}"/>
+							<a href="<c:out value='${bevestigURL}'/>">${voornaam.concat(klant.familienaam)}</a>
 						</td>
 						<td>${klant.straatNummer}</td>
 						<td>${klant.postcode}</td>

@@ -27,11 +27,11 @@
 			<tbody>
 				<c:forEach var='film' items='${filmsInMandje}'>
 					<tr>
-						<c:set var="teller" value="${teller + 1}"/>
+<%-- 						<c:set var="teller" value="${teller + 1}"/> --%>
 						<td>${film.titel}</td>
 						<td>${film.prijs}</td>
 						<td>
-							<input type='checkbox' name='id' value='${teller-1}'>
+							<input type='checkbox' name='id' value='${film.id}'>
 						</td>
 						<c:set var="totaal" value="${totaal + film.prijs}"/>
 					</tr>

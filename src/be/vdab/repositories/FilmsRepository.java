@@ -43,21 +43,16 @@ public class FilmsRepository extends AbstractRepository {
 		}
 	}
 	
-//	public Optional<Films> readFilmDetail(long id) {
 	public Films readFilmDetail(long id) {
 		try (Connection connection = dataSource.getConnection();
 			 PreparedStatement statement = connection.prepareStatement(SELECT_FILM_DETAIL)) {
 			connection.setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
 			connection.setAutoCommit(false);
 			statement.setLong(1, id);
-//			Optional<Films> film;
 			Films film = null;
 			try (ResultSet resultSet = statement.executeQuery()) {
 				if (resultSet.next()) {
 					film = resultSetRijNaarFilms(resultSet);
-//					film = Optional.of(resultSetRijNaarFilms(resultSet));
-//				} else {
-//					film = Optional.empty();
 				}
 			}
 			connection.commit();

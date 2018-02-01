@@ -67,12 +67,10 @@ public class InMandjeServlet extends HttpServlet {
 		String[] checked = request.getParameterValues("id");  
 		if (checked != null) {
 			for(String id : checked) {
-//				Films film = filmsRepository.readFilmDetail(Long.parseLong(id));
-//				int index = mandje.indexOf(film);
-				mandje.remove(Integer.parseInt(id));
-//				if (!id.isEmpty()) {
-//					mandje.remove(Long.parseLong(id));  // ipv Integer.parseInt(id)
-//				}
+				Films film = filmsRepository.readFilmDetail(Long.parseLong(id));
+				int index = mandje.indexOf(film);
+				mandje.remove(index);
+//				mandje.remove(Integer.parseInt(id));
 			}
 			session.setAttribute(MANDJE, mandje);
 		}

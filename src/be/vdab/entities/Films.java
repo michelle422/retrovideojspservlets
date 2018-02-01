@@ -84,7 +84,7 @@ public class Films implements Comparable<Films> {
 	}
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(Object obj) {	
 		if (!(obj instanceof Films))
 			return false;
 		Films film = (Films) obj;
@@ -94,8 +94,7 @@ public class Films implements Comparable<Films> {
 
 	@Override
 	public int compareTo(Films o) {
-		// TODO Auto-generated method stub
-		return 0;
+		return (int) (this.id - o.id);
 	}
 	
 	

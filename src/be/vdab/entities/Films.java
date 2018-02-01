@@ -2,7 +2,7 @@ package be.vdab.entities;
 
 import java.math.BigDecimal;
 
-public class Films {
+public class Films implements Comparable<Films> {
 	private long id;
 	private long genreId;
 	private String titel;
@@ -73,6 +73,29 @@ public class Films {
 
 	public void setPrijs(BigDecimal prijs) {
 		this.prijs = prijs;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + (int) (id ^ (id >>> 32));
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof Films))
+			return false;
+		Films film = (Films) obj;
+		
+		return id == film.getId();
+	}
+
+	@Override
+	public int compareTo(Films o) {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 	
 	

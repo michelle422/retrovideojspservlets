@@ -18,5 +18,12 @@
 		<label>${aantalFilms} film(s) voor ${voornaam.concat(klant.familienaam)}</label>
 		<input type='submit' value='Bevestigen' >
 	</form>
+	<c:if test="${not empty mislukt}">
+		<ul>
+			<c:forEach var="fout" items="${mislukt}">
+				<li><c:out value='${fout}' /></li>
+			</c:forEach>
+		</ul>
+	</c:if>
 </body>
 </html>

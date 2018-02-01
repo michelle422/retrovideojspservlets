@@ -35,7 +35,8 @@ public class FilmDetailServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String id = request.getParameter("id");
 		if (StringUtils.isLong(id)) {
-			filmsRepository.readFilmDetail(Long.parseLong(id)).ifPresent(film -> request.setAttribute("film", film));
+			request.setAttribute("film", filmsRepository.readFilmDetail(Long.parseLong(id)));
+//			filmsRepository.readFilmDetail(Long.parseLong(id)).ifPresent(film -> request.setAttribute("film", film));
 		} else {
 			request.setAttribute("fout", "id niet correct");
 		}
@@ -49,7 +50,7 @@ public class FilmDetailServlet extends HttpServlet {
 		String id = request.getParameter("id");
 		HttpSession session = request.getSession();
 		if (StringUtils.isLong(id)) {
-			filmsRepository.readFilmDetail(Long.parseLong(id)).ifPresent(film -> session.setAttribute("film", film));
+			session.setAttribute("film", filmsRepository.readFilmDetail(Long.parseLong(id)));
 		} else {
 			request.setAttribute("fout", "id niet correct");
 		}

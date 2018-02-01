@@ -49,6 +49,7 @@ public class BevestigenServlet extends HttpServlet {
 		HttpSession session = request.getSession(false);
 		if (session != null) {
 			@SuppressWarnings("unchecked")
+//			Map<Long, String> mandje = (Map<Long, String>) session.getAttribute(MANDJE);
 			List<Films> mandje = (List<Films>) session.getAttribute(MANDJE);
 			int aantalFilms = mandje.size();
 			request.setAttribute("aantalFilms", aantalFilms);
@@ -72,9 +73,10 @@ public class BevestigenServlet extends HttpServlet {
 		List<Long> filmIds = new ArrayList<>();
 		List<String> mislukt = new ArrayList<>();
 		int aantalFilms = mandje.size();
-		request.setAttribute("aantalFilms", aantalFilms);
+		request.setAttribute("aantalFilms", aantalFilms);		
 		for (Films film : mandje) {
-			if (film.getVoorraad() > film.getGereserveerd()) {
+			Films filmRec = filmsRepository.readFilmDetail(film.getId());
+			if (filmRec.getVoorraad() > filmRec.getGereserveerd()) {
 				filmIds.add(film.getId());
 			} else {
 				mislukt.add("Reservatie mislukt at ".concat(film.getTitel()));
@@ -85,6 +87,8 @@ public class BevestigenServlet extends HttpServlet {
 				Reservaties reservatie = new Reservaties(Long.parseLong(klantId), filmId, LocalDateTime.now());
 				reservatieRepository.createReservatie(reservatie);
 			}
+			filmsRepository.updateGereserveerd(filmIds);
+			session.invalidate();
 			response.sendRedirect(request.getContextPath() + REDIRECT_URL);
 		} else {
 			request.setAttribute("mislukt", mislukt);

@@ -2,7 +2,7 @@ package be.vdab.entities;
 
 import java.math.BigDecimal;
 
-public class Films implements Comparable<Films> {
+public class Film implements Comparable<Film> {
 	private long id;
 	private long genreId;
 	private String titel;
@@ -10,7 +10,7 @@ public class Films implements Comparable<Films> {
 	private long gereserveerd;
 	private BigDecimal prijs;
 	
-	public Films(long id, long genreId, String titel, long voorraad, long gereserveerd, BigDecimal prijs) {
+	public Film(long id, long genreId, String titel, long voorraad, long gereserveerd, BigDecimal prijs) {
 		this.id = id;
 		this.genreId = genreId;
 		this.titel = titel;
@@ -19,7 +19,7 @@ public class Films implements Comparable<Films> {
 		this.prijs = prijs;
 	}
 	
-	public Films(long id, String titel, long voorraad, long gereserveerd, BigDecimal prijs) {
+	public Film(long id, String titel, long voorraad, long gereserveerd, BigDecimal prijs) {
 		this.id = id;
 		this.titel = titel;
 		this.voorraad = voorraad;
@@ -85,15 +85,15 @@ public class Films implements Comparable<Films> {
 
 	@Override
 	public boolean equals(Object obj) {	
-		if (!(obj instanceof Films))
+		if (!(obj instanceof Film))
 			return false;
-		Films film = (Films) obj;
+		Film film = (Film) obj;
 		
 		return id == film.getId();
 	}
 
 	@Override
-	public int compareTo(Films o) {
+	public int compareTo(Film o) {
 		return (int) (this.id - o.id);
 	}
 	

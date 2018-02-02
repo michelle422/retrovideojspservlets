@@ -1,13 +1,13 @@
 package be.vdab.entities;
 
-public class Klanten {
+public class Klant {
 	private long id;
 	private String familienaam;
 	private String voornaam;
 	private String straatNummer;
 	private String postcode;
 	private String gemeente;
-	public Klanten(long id, String familienaam, String voornaam, String straatNummer, String postcode, String gemeente) {
+	public Klant(long id, String familienaam, String voornaam, String straatNummer, String postcode, String gemeente) {
 		this.id = id;
 		this.familienaam = familienaam;
 		this.voornaam = voornaam;

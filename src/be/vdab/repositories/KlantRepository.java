@@ -8,9 +8,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import be.vdab.entities.Klanten;
+import be.vdab.entities.Klant;
 
-public class KlantenRepository extends AbstractRepository {
+public class KlantRepository extends AbstractRepository {
 	public static final String SELECT_KLANTEN_FAMILIENAAM = 
 			"select id, familienaam, voornaam, straatNummer, postcode, gemeente "
 			+ "from klanten "
@@ -20,13 +20,13 @@ public class KlantenRepository extends AbstractRepository {
 			"select id, familienaam, voornaam, straatNummer, postcode, gemeente "
 			+ "from klanten where id = ?";
 	
-	public List<Klanten> readKlanten(String familienaam) {
+	public List<Klant> readKlanten(String familienaam) {
 		try (Connection connection = dataSource.getConnection();
 			 PreparedStatement statement = connection.prepareStatement(SELECT_KLANTEN_FAMILIENAAM)) {
 			connection.setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
 			connection.setAutoCommit(false);
 			statement.setString(1, "%" + familienaam + "%");
-			List<Klanten> klanten = new ArrayList<>();
+			List<Klant> klanten = new ArrayList<>();
 			try (ResultSet resultSet = statement.executeQuery()) {
 				while (resultSet.next()) {
 					klanten.add(resultSetRijNaarKlanten(resultSet));
@@ -39,13 +39,13 @@ public class KlantenRepository extends AbstractRepository {
 		}
 	}
 	
-	public Optional<Klanten> readKlant(long id) {
+	public Optional<Klant> readKlant(long id) {
 		try (Connection connection = dataSource.getConnection();
 			 PreparedStatement statement = connection.prepareStatement(SELECT_KLANT_ID)) {
 			connection.setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
 			connection.setAutoCommit(false);
 			statement.setLong(1, id);
-			Optional<Klanten> klant;
+			Optional<Klant> klant;
 			try (ResultSet resultSet = statement.executeQuery()) {
 				if (resultSet.next()) {
 					klant = Optional.of(resultSetRijNaarKlanten(resultSet));
@@ -60,8 +60,8 @@ public class KlantenRepository extends AbstractRepository {
 		}
 	}
 	
-	private Klanten resultSetRijNaarKlanten(ResultSet resultSet) throws SQLException {
-		return new Klanten(resultSet.getLong("id"),
+	private Klant resultSetRijNaarKlanten(ResultSet resultSet) throws SQLException {
+		return new Klant(resultSet.getLong("id"),
 				resultSet.getString("familienaam"), 
 				resultSet.getString("voornaam"), 
 				resultSet.getString("straatNummer"), 

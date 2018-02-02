@@ -1,9 +1,9 @@
 package be.vdab.entities;
 
-public class Genres {
+public class Genre {
 	private long id;
 	private String naam;
-	public Genres(long id, String naam) {
+	public Genre(long id, String naam) {
 		super();
 		this.id = id;
 		this.naam = naam;

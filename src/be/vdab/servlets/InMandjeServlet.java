@@ -1,8 +1,9 @@
 package be.vdab.servlets;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedHashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
 import javax.servlet.ServletException;
@@ -13,8 +14,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.sql.DataSource;
 
-import be.vdab.entities.Films;
-import be.vdab.repositories.FilmsRepository;
+import be.vdab.entities.Film;
+import be.vdab.repositories.FilmRepository;
 
 /**
  * Servlet implementation class InMandjeServlet
@@ -24,11 +25,11 @@ public class InMandjeServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static final String VIEW = "/WEB-INF/JSP/inmandje.jsp";
 	private static final String MANDJE = "mandje";
-	private final transient FilmsRepository filmsRepository = new FilmsRepository();
+	private final transient FilmRepository filmRepository = new FilmRepository();
 	
-	@Resource(name = FilmsRepository.JNDI_NAME)
+	@Resource(name = FilmRepository.JNDI_NAME)
 	void setDataSource(DataSource dataSource) {
-		filmsRepository.setDataSource(dataSource);
+		filmRepository.setDataSource(dataSource);
 	}
 
 	/**
@@ -38,19 +39,18 @@ public class InMandjeServlet extends HttpServlet {
 		HttpSession session = request.getSession(false);
 		if (session != null) {
 			@SuppressWarnings("unchecked")
-//			Map<String, BigDecimal> mandje = (Map<String, BigDecimal>) session.getAttribute(MANDJE);
-			List<Films> mandje = (List<Films>) session.getAttribute(MANDJE);
-			Films film = (Films) session.getAttribute("film");
+			Set<Long> mandje = (Set<Long>) session.getAttribute(MANDJE);
+			Film film = (Film) session.getAttribute("film");
 			if (mandje == null) {
-//				mandje = new HashMap<>();
-				mandje = new ArrayList<>();
+				mandje = new LinkedHashSet<>();	
 			}
 			if (film != null) {
-//				mandje.put(film.getTitel(), film.getPrijs());
-				mandje.add(film);
+				mandje.add(film.getId());
 				session.removeAttribute("film");
 			}
-			request.setAttribute("filmsInMandje", mandje);
+			request.setAttribute("filmsInMandje", 
+									mandje.stream().map(id -> filmRepository.readFilmDetail(id))
+									.collect(Collectors.toList()));
 			session.setAttribute(MANDJE, mandje);
 		}
 		request.getRequestDispatcher(VIEW).forward(request, response);
@@ -62,15 +62,12 @@ public class InMandjeServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession(false);
 		@SuppressWarnings("unchecked")
-//		Map<Long, String> mandje = (Map<Long, String>) session.getAttribute(MANDJE);
-		List<Films> mandje = (List<Films>) session.getAttribute(MANDJE);
+		Set<Long> mandje = (Set<Long>) session.getAttribute(MANDJE);
 		String[] checked = request.getParameterValues("id");  
 		if (checked != null) {
 			for(String id : checked) {
-				Films film = filmsRepository.readFilmDetail(Long.parseLong(id));
-				int index = mandje.indexOf(film);
-				mandje.remove(index);
-//				mandje.remove(Integer.parseInt(id));
+				Film film = filmRepository.readFilmDetail(Long.parseLong(id));
+				mandje.remove(film.getId());
 			}
 			session.setAttribute(MANDJE, mandje);
 		}

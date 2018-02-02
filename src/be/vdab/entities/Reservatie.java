@@ -2,11 +2,11 @@ package be.vdab.entities;
 
 import java.time.LocalDateTime;
 
-public class Reservaties {
+public class Reservatie {
 	private long klantId;
 	private long filmId;
 	private LocalDateTime reservatieDatum;
-	public Reservaties(long klantId, long filmId, LocalDateTime reservatieDatum) {
+	public Reservatie(long klantId, long filmId, LocalDateTime reservatieDatum) {
 		this.klantId = klantId;
 		this.filmId = filmId;
 		this.reservatieDatum = reservatieDatum;

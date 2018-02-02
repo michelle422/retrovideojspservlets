@@ -11,5 +11,6 @@
 <body>
 	<h1>Reservaties</h1>
 	<vdab:menu/>
+	<img src='<c:url value="/images/film.jpeg"/>' alt='film' class='fullwidth'>
 </body>
 </html>

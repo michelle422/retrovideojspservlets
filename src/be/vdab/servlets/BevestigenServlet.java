@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import javax.annotation.Resource;
 import javax.servlet.ServletException;
@@ -14,10 +15,10 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.sql.DataSource;
 
-import be.vdab.entities.Films;
-import be.vdab.entities.Reservaties;
-import be.vdab.repositories.FilmsRepository;
-import be.vdab.repositories.KlantenRepository;
+import be.vdab.entities.Film;
+import be.vdab.entities.Reservatie;
+import be.vdab.repositories.FilmRepository;
+import be.vdab.repositories.KlantRepository;
 import be.vdab.repositories.ReservatieRepository;
 import be.vdab.utils.StringUtils;
 
@@ -30,15 +31,15 @@ public class BevestigenServlet extends HttpServlet {
 	private static final String VIEW = "/WEB-INF/JSP/bevestigen.jsp";
 	private static final String MANDJE = "mandje";
 	private static final String REDIRECT_URL = "/rapport.htm";
-	private final transient KlantenRepository klantenRepository = new KlantenRepository();
+	private final transient KlantRepository klantRepository = new KlantRepository();
 	private final transient ReservatieRepository reservatieRepository = new ReservatieRepository();
-	private final transient FilmsRepository filmsRepository = new FilmsRepository();
+	private final transient FilmRepository filmRepository = new FilmRepository();
     
 	@Resource(name = ReservatieRepository.JNDI_NAME)
 	void setDataSource(DataSource dataSource) {
-		klantenRepository.setDataSource(dataSource);
+		klantRepository.setDataSource(dataSource);
 		reservatieRepository.setDataSource(dataSource);
-		filmsRepository.setDataSource(dataSource);
+		filmRepository.setDataSource(dataSource);
 	}
        
 	/**
@@ -49,12 +50,11 @@ public class BevestigenServlet extends HttpServlet {
 		HttpSession session = request.getSession(false);
 		if (session != null) {
 			@SuppressWarnings("unchecked")
-//			Map<Long, String> mandje = (Map<Long, String>) session.getAttribute(MANDJE);
-			List<Films> mandje = (List<Films>) session.getAttribute(MANDJE);
+			Set<Long> mandje = (Set<Long>) session.getAttribute(MANDJE);
 			int aantalFilms = mandje.size();
 			request.setAttribute("aantalFilms", aantalFilms);
 			if (StringUtils.isLong(klantId)) {
-				klantenRepository.readKlant(Long.parseLong(klantId)).ifPresent(klant -> request.setAttribute("klant", klant));
+				klantRepository.readKlant(Long.parseLong(klantId)).ifPresent(klant -> request.setAttribute("klant", klant));
 			} else {
 				request.setAttribute("fout", "id niet correct");
 			}
@@ -69,25 +69,25 @@ public class BevestigenServlet extends HttpServlet {
 		String klantId = request.getParameter("id");
 		HttpSession session = request.getSession(false);
 		@SuppressWarnings("unchecked")
-		List<Films> mandje = (List<Films>) session.getAttribute(MANDJE);
+		Set<Long> mandje = (Set<Long>) session.getAttribute(MANDJE);
 		List<Long> filmIds = new ArrayList<>();
 		List<String> mislukt = new ArrayList<>();
 		int aantalFilms = mandje.size();
 		request.setAttribute("aantalFilms", aantalFilms);		
-		for (Films film : mandje) {
-			Films filmRec = filmsRepository.readFilmDetail(film.getId());
+		for (Long id : mandje) {
+			Film filmRec = filmRepository.readFilmDetail(id);
 			if (filmRec.getVoorraad() > filmRec.getGereserveerd()) {
-				filmIds.add(film.getId());
+				filmIds.add(id);
 			} else {
-				mislukt.add("Reservatie mislukt at ".concat(film.getTitel()));
+				String titel = filmRepository.readFilmDetail(id).getTitel();
+				mislukt.add("Reservatie mislukt at ".concat(titel));
 			}	
 		}
 		if (mislukt.isEmpty()) {
 			for (long filmId : filmIds) {
-				Reservaties reservatie = new Reservaties(Long.parseLong(klantId), filmId, LocalDateTime.now());
+				Reservatie reservatie = new Reservatie(Long.parseLong(klantId), filmId, LocalDateTime.now());
 				reservatieRepository.createReservatie(reservatie);
 			}
-			filmsRepository.updateGereserveerd(filmIds);
 			session.invalidate();
 			response.sendRedirect(request.getContextPath() + REDIRECT_URL);
 		} else {

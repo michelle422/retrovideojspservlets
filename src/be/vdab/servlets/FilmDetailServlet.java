@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.sql.DataSource;
 
-import be.vdab.repositories.FilmsRepository;
+import be.vdab.repositories.FilmRepository;
 import be.vdab.utils.StringUtils;
 
 /**
@@ -22,11 +22,11 @@ public class FilmDetailServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static final String VIEW = "/WEB-INF/JSP/filmdetail.jsp";
 	private static final String REDIRECT_URL = "/inmandje.htm";
-	private final transient FilmsRepository filmsRepository = new FilmsRepository();
+	private final transient FilmRepository filmRepository = new FilmRepository();
        
-	@Resource(name = FilmsRepository.JNDI_NAME)
+	@Resource(name = FilmRepository.JNDI_NAME)
 	void setDataSource(DataSource dataSource) {
-		filmsRepository.setDataSource(dataSource);
+		filmRepository.setDataSource(dataSource);
 	}
 
 	/**
@@ -35,8 +35,7 @@ public class FilmDetailServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String id = request.getParameter("id");
 		if (StringUtils.isLong(id)) {
-			request.setAttribute("film", filmsRepository.readFilmDetail(Long.parseLong(id)));
-//			filmsRepository.readFilmDetail(Long.parseLong(id)).ifPresent(film -> request.setAttribute("film", film));
+			request.setAttribute("film", filmRepository.readFilmDetail(Long.parseLong(id)));
 		} else {
 			request.setAttribute("fout", "id niet correct");
 		}
@@ -50,7 +49,7 @@ public class FilmDetailServlet extends HttpServlet {
 		String id = request.getParameter("id");
 		HttpSession session = request.getSession();
 		if (StringUtils.isLong(id)) {
-			session.setAttribute("film", filmsRepository.readFilmDetail(Long.parseLong(id)));
+			session.setAttribute("film", filmRepository.readFilmDetail(Long.parseLong(id)));
 		} else {
 			request.setAttribute("fout", "id niet correct");
 		}

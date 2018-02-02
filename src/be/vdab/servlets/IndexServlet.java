@@ -11,8 +11,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
 
-import be.vdab.entities.Genres;
-import be.vdab.repositories.FilmsRepository;
+import be.vdab.entities.Genre;
+import be.vdab.repositories.FilmRepository;
+import be.vdab.repositories.GenreRepository;
 
 /**
  * Servlet implementation class IndexServlet
@@ -21,11 +22,13 @@ import be.vdab.repositories.FilmsRepository;
 public class IndexServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static final String VIEW = "/WEB-INF/JSP/index.jsp"; 
-	private final transient FilmsRepository filmsRepository = new FilmsRepository();
+	private final transient FilmRepository filmRepository = new FilmRepository();
+	private final transient GenreRepository genreRepository = new GenreRepository();
 	
-	@Resource(name = FilmsRepository.JNDI_NAME)
+	@Resource(name = FilmRepository.JNDI_NAME)
 	void setDataSource(DataSource dataSource) {
-		filmsRepository.setDataSource(dataSource);
+		filmRepository.setDataSource(dataSource);
+		genreRepository.setDataSource(dataSource);
 	} 
 
 	/**
@@ -33,7 +36,7 @@ public class IndexServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		List<Genres> genres = filmsRepository.findAllGenres();
+		List<Genre> genres = genreRepository.findAllGenres();
 		request.setAttribute("genres", genres);
 		request.getRequestDispatcher(VIEW).forward(request, response);
 	}

@@ -12,20 +12,20 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
 
-import be.vdab.repositories.KlantenRepository;
+import be.vdab.repositories.KlantRepository;
 
 /**
- * Servlet implementation class KlantenServlet
+ * Servlet implementation class KlantServlet
  */
 @WebServlet("/klanten.htm")
-public class KlantenServlet extends HttpServlet {
+public class KlantServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static final String VIEW = "/WEB-INF/JSP/klanten.jsp";
-	private final transient KlantenRepository klantenRepository = new KlantenRepository();
+	private final transient KlantRepository klantRepository = new KlantRepository();
 
-	@Resource(name = KlantenRepository.JNDI_NAME)
+	@Resource(name = KlantRepository.JNDI_NAME)
 	void setDataSource(DataSource dataSource) {
-		klantenRepository.setDataSource(dataSource);
+		klantRepository.setDataSource(dataSource);
 	}
        
 	/**
@@ -39,7 +39,7 @@ public class KlantenServlet extends HttpServlet {
 				fouten.add("verplicht");
 			}
 			if (fouten.isEmpty()) {
-				request.setAttribute("klanten", klantenRepository.readKlanten(familienaam));
+				request.setAttribute("klanten", klantRepository.readKlanten(familienaam));
 			} else {
 				request.setAttribute("fouten", fouten);
 			}
